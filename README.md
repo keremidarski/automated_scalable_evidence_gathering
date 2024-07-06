@@ -1,6 +1,5 @@
 # Automated Digital Evidence Gathering and Analysis
 
-## Overview
 This project provides an automated solution for gathering and analyzing digital evidence using Ansible, Docker, and Velociraptor. It is designed to be scalable and OS-agnostic, supporting both Windows and Linux environments.
 
 ## Features
