@@ -1,4 +1,4 @@
-# Automated Digital Evidence Gathering and Analysis
+# Automated Scalable Digital Evidence Gathering and Analysis
 
 This project aims to automate the gathering and analysis of digital evidence across various operating systems (Windows, Linux, MacOS) using tools like Velociraptor and GRR. The workflow is designed to be scalable and OS-agnostic, facilitating quick and efficient deployment of forensic tools during an emergency.
 
@@ -16,8 +16,8 @@ This project aims to automate the gathering and analysis of digital evidence acr
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
-   cd project-root
+   git clone https://github.com/keremidarski/automated_scalable_evidence_gathering.git
+   cd automated_scalable_evidence_gathering
    ```
 
 2. **Configure the inventory:**
