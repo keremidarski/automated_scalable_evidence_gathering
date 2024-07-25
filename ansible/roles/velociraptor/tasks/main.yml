@@ -1,0 +1,13 @@
+- name: Pull Velociraptor image
+  docker_image:
+    name: velociraptor
+    source: build
+    build:
+      path: ../../../../docker/velociraptor
+
+- name: Run Velociraptor container
+  docker_container:
+    name: velociraptor
+    image: velociraptor
+    state: started
+    restart_policy: always

@@ -1,0 +1,13 @@
+- name: Pull GRR image
+  docker_image:
+    name: grr
+    source: build
+    build:
+      path: ../../../../docker/grr
+
+- name: Run GRR container
+  docker_container:
+    name: grr
+    image: grr
+    state: started
+    restart_policy: always
