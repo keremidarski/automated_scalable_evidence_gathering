@@ -1,6 +1,6 @@
 # Automated Scalable Digital Evidence Gathering and Analysis
 
-This project aims to automate the gathering and analysis of digital evidence across various operating systems (Windows, Linux, MacOS) using tools like Velociraptor and GRR. The workflow is designed to be scalable and OS-agnostic, facilitating quick and efficient deployment of forensic tools during an emergency.
+This project aims to automate the gathering and analysis of digital evidence across various operating systems (Windows, Linux, MacOS, FreeBSD) using tools like [Velociraptor](https://docs.velociraptor.app/) and [GRR](https://grr-doc.readthedocs.io/en/latest/). The workflow is designed to be scalable and OS-agnostic, facilitating quick and efficient deployment of forensic tools during an emergency.
 
 ### Key Features
 
