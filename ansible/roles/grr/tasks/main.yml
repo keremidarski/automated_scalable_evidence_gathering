@@ -1,13 +1,21 @@
-- name: Pull GRR image
-  docker_image:
-    name: grr
-    source: build
-    build:
-      path: ../../../../docker/grr
-
-- name: Run GRR container
+- name: Install GRR server
+  when: install_server
   docker_container:
-    name: grr
+    name: grr_server
     image: grr
     state: started
     restart_policy: always
+    ports:
+      - "8000:8000"
+  environment:
+    GRR_URL: "{{ server_url }}"
+
+- name: Deploy GRR agent
+  when: not install_server
+  docker_container:
+    name: grr_agent
+    image: grr
+    state: started
+    restart_policy: always
+  environment:
+    GRR_SERVER: "{{ server_url }}"

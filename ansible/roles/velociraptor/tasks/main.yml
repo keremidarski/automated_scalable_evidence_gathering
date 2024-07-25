@@ -1,13 +1,21 @@
-- name: Pull Velociraptor image
-  docker_image:
-    name: velociraptor
-    source: build
-    build:
-      path: ../../../../docker/velociraptor
-
-- name: Run Velociraptor container
+- name: Install Velociraptor server
+  when: install_server
   docker_container:
-    name: velociraptor
+    name: velociraptor_server
     image: velociraptor
     state: started
     restart_policy: always
+    ports:
+      - "8000:8000"
+  environment:
+    VELOCIRAPTOR_URL: "{{ server_url }}"
+
+- name: Deploy Velociraptor agent
+  when: not install_server
+  docker_container:
+    name: velociraptor_agent
+    image: velociraptor
+    state: started
+    restart_policy: always
+  environment:
+    VELOCIRAPTOR_SERVER: "{{ server_url }}"
