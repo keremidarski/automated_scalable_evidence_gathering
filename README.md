@@ -19,3 +19,12 @@ This project provides an automated solution for gathering and analyzing digital 
    git clone git@github.com:keremidarski/automated_scalable_evidence_gathering.git
    cd automated_scalable_evidence_gathering
    ```
+
+2. Configure inventory:
+* Update `ansible/hosts` with the host details.
+
+3. Install Docker on all hosts:
+   ```bash
+   ansible-playbook ansible/install_docker.yml
+   ```
+
