@@ -12,8 +12,39 @@
     update_cache: yes
   when: ansible_os_family == 'RedHat'
 
-- name: Ensure Docker is running
+- name: Install Docker on Windows
+  win_feature:
+    name: Containers
+    state: present
+  when: ansible_os_family == "Windows"
+
+- name: Install Docker on MacOS
+  homebrew_cask:
+    name: docker
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Install Docker on FreeBSD
+  become: true
+  pkgng:
+    name: docker
+    state: present
+  when: ansible_os_family == "FreeBSD"
+
+- name: Ensure Docker is running on Linux and FreeBSD
   service:
     name: docker
     state: started
     enabled: yes
+  when: ansible_os_family in ["Debian", "RedHat", "FreeBSD"]
+
+- name: Ensure Docker is running on MacOS
+  command: "/usr/local/bin/brew services start docker"
+  when: ansible_os_family == "Darwin"
+
+- name: Ensure Docker is running on Windows
+  win_service:
+    name: docker
+    start_mode: auto
+    state: started
+  when: ansible_os_family == "Windows"

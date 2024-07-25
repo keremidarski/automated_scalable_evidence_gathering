@@ -1,8 +1,11 @@
 [windows]
-windows_host_1 ansible_host=192.168.1.10 ansible_user=Administrator ansible_password=yourpassword ansible_port=5986 ansible_connection=winrm
+windows_host_1 ansible_host=192.168.1.10 ansible_user=Admin ansible_password=Password ansible_connection=winrm
 
 [linux]
-linux_host_1 ansible_host=192.168.1.11 ansible_user=root ansible_ssh_pass=yourpassword
+linux_host_1 ansible_host=192.168.1.20 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa
 
 [macos]
-macos_host_1 ansible_host=192.168.1.12 ansible_user=admin ansible_ssh_pass=yourpassword
+macos_host_1 ansible_host=192.168.1.30 ansible_user=Admin ansible_become=true
+
+[freebsd]
+freebsd_host_1 ansible_host=192.168.1.40 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa
