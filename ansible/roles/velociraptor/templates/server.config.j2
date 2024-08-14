@@ -1,0 +1,8 @@
+Client:
+  name: {{ ansible_hostname }}
+  frontend_urls:
+    - {{ server_url }}
+Monitoring:
+  configuration_monitor:
+    paths:
+      - /etc/velociraptor
