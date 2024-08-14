@@ -1,5 +1,10 @@
-- name: Install Velociraptor server
+- name: Generate Velociraptor server config
+  template:
+    src: server.config.j2
+    dest: /etc/velociraptor/server.config.yaml
   when: install_server
+
+- name: Deploy Velociraptor server
   docker_container:
     name: velociraptor_server
     image: velociraptor
@@ -7,15 +12,22 @@
     restart_policy: always
     ports:
       - "8000:8000"
-  environment:
-    VELOCIRAPTOR_URL: "{{ server_url }}"
+    volumes:
+      - /etc/velociraptor/server.config.yaml:/etc/velociraptor/server.config.yaml
+
+- name: Generate Velociraptor client config
+  template:
+    src: client.config.j2
+    dest: /etc/velociraptor/client.config.yaml
+  when: not install_server
 
 - name: Deploy Velociraptor agent
-  when: not install_server
   docker_container:
     name: velociraptor_agent
     image: velociraptor
     state: started
     restart_policy: always
+    volumes:
+      - /etc/velociraptor/client.config.yaml:/etc/velociraptor/client.config.yaml
   environment:
     VELOCIRAPTOR_SERVER: "{{ server_url }}"
