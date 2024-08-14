@@ -1,5 +1,10 @@
-- name: Install GRR server
+- name: Generate GRR server config
+  template:
+    src: server.local.j2
+    dest: /etc/grr/server.local.yaml
   when: install_server
+
+- name: Deploy GRR server
   docker_container:
     name: grr_server
     image: grr
@@ -7,15 +12,22 @@
     restart_policy: always
     ports:
       - "8000:8000"
-  environment:
-    GRR_URL: "{{ server_url }}"
+    volumes:
+      - /etc/grr/server.local.yaml:/etc/grr/server.local.yaml
+
+- name: Generate GRR client config
+  template:
+    src: client.local.j2
+    dest: /etc/grr/client.local.yaml
+  when: not install_server
 
 - name: Deploy GRR agent
-  when: not install_server
   docker_container:
     name: grr_agent
     image: grr
     state: started
     restart_policy: always
+    volumes:
+      - /etc/grr/client.local.yaml:/etc/grr/client.local.yaml
   environment:
     GRR_SERVER: "{{ server_url }}"
