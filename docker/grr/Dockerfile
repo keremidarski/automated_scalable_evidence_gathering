@@ -12,4 +12,6 @@ RUN apt-get install -y /tmp/grr-server.deb
 # Install GRR client
 RUN apt-get install -y /tmp/grr-client.deb
 
-ENTRYPOINT ["grr_server"]
+COPY server.local.yaml /etc/grr/server.local.yaml
+
+ENTRYPOINT ["grr_server", "--config", "/etc/grr/server.local.yaml"]
