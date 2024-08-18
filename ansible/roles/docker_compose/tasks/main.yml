@@ -1,0 +1,12 @@
+- name: Install Docker Compose on Linux
+  get_url:
+    url: https://github.com/docker/compose/releases/download/v2.16.0/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+  when: ansible_os_family in ["Debian", "RedHat"]
+
+- name: Install Docker Compose on Windows
+  win_chocolatey:
+    name: docker-compose
+    state: present
+  when: ansible_os_family == 'Windows'

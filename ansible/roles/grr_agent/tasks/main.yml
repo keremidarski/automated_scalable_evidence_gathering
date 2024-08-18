@@ -1,0 +1,18 @@
+- name: Install GRR Agent on Debian-based systems
+  apt:
+    name: ./grr-client_3.4.0.4_amd64.deb
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Install GRR Agent on RedHat-based systems
+  yum:
+    name: ./grr-client_3.4.0.4_amd64.rpm
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: Install GRR Agent on Windows
+  win_package:
+    path: C:\path\to\grr-client.msi
+    state: present
+  when: ansible_os_family == 'Windows'
+

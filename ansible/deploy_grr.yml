@@ -1,21 +1,12 @@
-- hosts: localhost
-  become: true
-  roles:
-    - role: grr
-      vars:
-        install_server: true
-        server_url: "http://localhost:8000"
-  tasks:
-    - name: Ensure Docker is running
-      service:
-        name: docker
-        state: started
-        enabled: yes
+- name: Install Docker
+  include_role:
+    name: docker
 
-- hosts: all
-  become: true
-  roles:
-    - role: grr
-      vars:
-        install_server: false
-        server_url: "http://{{ hostvars['localhost']['ansible_facts']['default_ipv4']['address'] }}:8000"
+- name: Deploy GRR server in Docker
+  docker_container:
+    name: grr_server
+    image: grr
+    state: started
+    restart_policy: always
+    ports:
+      - "8000:8000"

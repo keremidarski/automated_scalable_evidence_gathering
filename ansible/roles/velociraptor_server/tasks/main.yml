@@ -1,0 +1,33 @@
+- name: Install Docker
+  include_role:
+    name: docker
+
+- name: Install Docker Compose
+  include_role:
+    name: docker_compose
+
+- name: Clone Velociraptor Docker repository
+  git:
+    repo: https://github.com/weslambert/velociraptor-docker
+    dest: /opt/velociraptor-docker
+
+- name: Update .env file with desired credentials
+  template:
+    src: env.j2
+    dest: /opt/velociraptor-docker/.env
+  vars:
+    admin_user: "admin"
+    admin_pass: "admin"
+
+- name: Start Velociraptor using Docker Compose
+  command: docker-compose up -d
+  args:
+    chdir: /opt/velociraptor-docker
+
+- name: Wait for Velociraptor server to be up
+  wait_for:
+    port: 8889
+    timeout: 300
+    state: started
+    delay: 10
+

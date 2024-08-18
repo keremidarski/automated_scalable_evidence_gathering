@@ -1,21 +1,9 @@
 - hosts: localhost
   become: true
   roles:
-    - role: velociraptor
-      vars:
-        install_server: true
-        server_url: "http://localhost:8000"
-  tasks:
-    - name: Ensure Docker is running
-      service:
-        name: docker
-        state: started
-        enabled: yes
+    - role: velociraptor_server
 
 - hosts: all
   become: true
   roles:
-    - role: velociraptor
-      vars:
-        install_server: false
-        server_url: "http://{{ hostvars['localhost']['ansible_facts']['default_ipv4']['address'] }}:8000"
+    - role: velociraptor_agent
