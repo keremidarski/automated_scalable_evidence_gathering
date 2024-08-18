@@ -1,0 +1,19 @@
+- name: Install Git on Debian-based systems
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
+- name: Install Git on RedHat-based systems
+  yum:
+    name: git
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'RedHat'
+
+- name: Install Git on Windows
+  win_chocolatey:
+    name: git
+    state: present
+  when: ansible_os_family == 'Windows'

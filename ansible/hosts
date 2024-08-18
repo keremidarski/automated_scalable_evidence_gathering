@@ -1,11 +1,8 @@
-[windows]
-windows_host_1 ansible_host=192.168.1.10 ansible_user=Admin ansible_password=Password ansible_connection=winrm
+[ubuntu_hosts]
+ubuntu_host ansible_host=192.168.0.101 ansible_user=ubuntu-test ansible_ssh_private_key_file=~/.ssh/your_private_key
 
-[linux]
-linux_host_1 ansible_host=192.168.1.20 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa
+[centos_hosts]
+centos_host ansible_host=192.168.0.102 ansible_user=centos-test ansible_ssh_private_key_file=~/.ssh/your_private_key
 
-[macos]
-macos_host_1 ansible_host=192.168.1.30 ansible_user=Admin ansible_become=true
-
-[freebsd]
-freebsd_host_1 ansible_host=192.168.1.40 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa
+[windows_hosts]
+windows_host ansible_host=192.168.0.103 ansible_user=Administrator ansible_password=your_windows_password ansible_connection=winrm ansible_winrm_transport=ntlm ansible_winrm_server_cert_validation=ignore

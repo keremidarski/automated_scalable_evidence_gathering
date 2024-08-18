@@ -1,0 +1,51 @@
+- name: Repack Velociraptor client executable for Debian-based clients
+  command: ./velociraptor --config client.config.yaml debian client --output clients/linux/velociraptor_client_exe.deb
+  args:
+    chdir: /opt/velociraptor-docker/velociraptor/
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Repack Velociraptor client executable for RedHat-based clients
+  command: ./velociraptor --config client.config.yaml rpm client --output clients/linux/velociraptor_client_exe.rpm
+  args:
+    chdir: /opt/velociraptor-docker/velociraptor/
+  become: true
+  when: ansible_os_family == 'RedHat'
+
+- name: Distribute Velociraptor client executable to Debian-based hosts
+  copy:
+    src: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_exe.deb
+    dest: /usr/local/src/velociraptor_client_exe.deb
+    mode: '0755'
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Distribute Velociraptor client executable to RedHat-based hosts
+  copy:
+    src: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_exe.rpm
+    dest: /usr/local/src/velociraptor_client_exe.rpm
+    mode: '0755'
+  become: true
+  when: ansible_os_family == 'RedHat'
+
+- name: Distribute Velociraptor client executable to Windows hosts
+  win_copy:
+    src: /opt/velociraptor-docker/velociraptor/clients/windows/velociraptor_client_repacked.msi
+    dest: C:\Program Files\Velociraptor\velociraptor_client_repacked.msi
+  become: true
+  when: ansible_os_family == 'Windows'
+
+- name: Install Velociraptor client on Debian-based hosts
+  command: dpkg -i /usr/local/src/velociraptor_client_exe.deb
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Install Velociraptor client on RedHat-based hosts
+  command: rpm -i /usr/local/src/velociraptor_client_exe.rpm
+  become: true
+  when: ansible_os_family == 'RedHat'
+
+- name: Install Velociraptor client on Windows hosts
+  win_shell: msiexec /i "C:\Program Files\Velociraptor\velociraptor_client_repacked.msi" /quiet
+  become: true
+  when: ansible_os_family == 'Windows'

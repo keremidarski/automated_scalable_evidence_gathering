@@ -6,4 +6,4 @@
 - hosts: all
   become: true
   roles:
-    - role: velociraptor_agent
+    - role: velociraptor_client

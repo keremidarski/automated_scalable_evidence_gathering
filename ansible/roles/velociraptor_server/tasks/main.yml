@@ -1,33 +1,37 @@
-- name: Install Docker
-  include_role:
-    name: docker
-
-- name: Install Docker Compose
-  include_role:
-    name: docker_compose
-
-- name: Clone Velociraptor Docker repository
+- name: Clone the Velociraptor Docker repository
   git:
     repo: https://github.com/weslambert/velociraptor-docker
     dest: /opt/velociraptor-docker
 
-- name: Update .env file with desired credentials
-  template:
-    src: env.j2
-    dest: /opt/velociraptor-docker/.env
-  vars:
-    admin_user: "admin"
-    admin_pass: "admin"
+- name: Update the .env file with server settings
+  lineinfile:
+    path: /opt/velociraptor-docker/.env
+    regexp: '^VELOX_SERVER_URL=.*$'
+    line: 'VELOX_SERVER_URL=https://{{ ansible_default_ipv4.address }}:8000/'
+  notify: Restart Velociraptor
+
+- name: Update the .env file with frontend hostname
+  lineinfile:
+    path: /opt/velociraptor-docker/.env
+    regexp: '^VELOX_FRONTEND_HOSTNAME=.*$'
+    line: 'VELOX_FRONTEND_HOSTNAME={{ ansible_default_ipv4.address }}'
+  notify: Restart Velociraptor
 
 - name: Start Velociraptor using Docker Compose
   command: docker-compose up -d
   args:
     chdir: /opt/velociraptor-docker
+  notify: Restart Velociraptor
 
-- name: Wait for Velociraptor server to be up
-  wait_for:
-    port: 8889
-    timeout: 300
-    state: started
-    delay: 10
+- name: Ensure Velociraptor is running
+  command: docker ps -f name=velociraptor_server
+  register: result
+  until: result.stdout.find('velociraptor_server') != -1
+  retries: 5
+  delay: 10
 
+handlers:
+  - name: Restart Velociraptor
+    command: docker-compose down && docker-compose up -d
+    args:
+      chdir: /opt/velociraptor-docker
