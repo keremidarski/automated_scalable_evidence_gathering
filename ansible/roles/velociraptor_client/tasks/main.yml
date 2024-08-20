@@ -1,17 +1,3 @@
-- name: Repack Velociraptor client executable for Debian-based clients
-  command: ./velociraptor --config client.config.yaml debian client --output clients/linux/velociraptor_client_exe.deb
-  args:
-    chdir: /opt/velociraptor-docker/velociraptor/
-  become: true
-  when: ansible_os_family == 'Debian'
-
-- name: Repack Velociraptor client executable for RedHat-based clients
-  command: ./velociraptor --config client.config.yaml rpm client --output clients/linux/velociraptor_client_exe.rpm
-  args:
-    chdir: /opt/velociraptor-docker/velociraptor/
-  become: true
-  when: ansible_os_family == 'RedHat'
-
 - name: Distribute Velociraptor client executable to Debian-based hosts
   copy:
     src: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_exe.deb
@@ -32,7 +18,7 @@
   win_copy:
     src: /opt/velociraptor-docker/velociraptor/clients/windows/velociraptor_client_repacked.msi
     dest: C:\Program Files\Velociraptor\velociraptor_client_repacked.msi
-  become: true
+  # become: true
   when: ansible_os_family == 'Windows'
 
 - name: Install Velociraptor client on Debian-based hosts
@@ -47,5 +33,5 @@
 
 - name: Install Velociraptor client on Windows hosts
   win_shell: msiexec /i "C:\Program Files\Velociraptor\velociraptor_client_repacked.msi" /quiet
-  become: true
+  # become: true
   when: ansible_os_family == 'Windows'

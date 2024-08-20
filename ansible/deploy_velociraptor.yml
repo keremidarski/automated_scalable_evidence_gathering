@@ -1,9 +1,11 @@
 - hosts: localhost
   become: true
   roles:
-    - role: velociraptor_server
+    - velociraptor_server
+    - velociraptor_executables
 
 - hosts: all
   become: true
   roles:
     - role: velociraptor_client
+

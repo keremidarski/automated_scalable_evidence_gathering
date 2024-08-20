@@ -1,0 +1,26 @@
+- name: Wait for Docker container to start Velociraptor service
+  shell: "docker exec velociraptor ps aux | grep -q 'velociraptor'"
+  retries: 10
+  delay: 5
+  register: result
+  until: result.rc == 0
+
+- name: Ensure Velociraptor directories are created
+  shell: "docker exec velociraptor mkdir -p /velociraptor/clients/linux"
+  when: result.rc == 0
+
+- name: Create repack script
+  become: true
+  copy:
+    content: |
+      #!/bin/bash
+      cd /opt/velociraptor-docker/velociraptor
+      ./velociraptor --config client.config.yaml debian client --output clients/linux/velociraptor_client_repacked.deb
+      ./velociraptor --config client.config.yaml rpm client --output clients/linux/velociraptor_client_repacked.rpm
+    dest: /opt/velociraptor-docker/repack_clients.sh
+    mode: '0755'
+
+- name: Repack Velociraptor executables
+  become: true
+  command: /opt/velociraptor-docker/repack_clients.sh
+  when: result.rc == 0
