@@ -9,6 +9,16 @@
   shell: "docker exec velociraptor mkdir -p /velociraptor/clients/linux"
   when: result.rc == 0
 
+- name: Check if Debian package exists
+  stat:
+    path: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_repacked.deb
+  register: deb_package
+
+- name: Check if RPM package exists
+  stat:
+    path: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_repacked.rpm
+  register: rpm_package
+
 - name: Create repack script
   become: true
   copy:
@@ -17,10 +27,19 @@
       cd /opt/velociraptor-docker/velociraptor
       ./velociraptor --config client.config.yaml debian client --output clients/linux/velociraptor_client_repacked.deb
       ./velociraptor --config client.config.yaml rpm client --output clients/linux/velociraptor_client_repacked.rpm
+      chmod 0644 clients/linux/velociraptor_client_repacked.deb
+      chmod 0644 clients/linux/velociraptor_client_repacked.rpm
     dest: /opt/velociraptor-docker/repack_clients.sh
     mode: '0755'
+  when:
+    - not deb_package.stat.exists
+    - not rpm_package.stat.exists
 
 - name: Repack Velociraptor executables
   become: true
   command: /opt/velociraptor-docker/repack_clients.sh
-  when: result.rc == 0
+  when:
+    - result.rc == 0
+    - not deb_package.stat.exists
+    - not rpm_package.stat.exists
+

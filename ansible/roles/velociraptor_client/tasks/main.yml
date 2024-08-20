@@ -1,6 +1,6 @@
 - name: Distribute Velociraptor client executable to Debian-based hosts
   copy:
-    src: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_exe.deb
+    src: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_repacked.deb
     dest: /usr/local/src/velociraptor_client_exe.deb
     mode: '0755'
   become: true
@@ -8,7 +8,7 @@
 
 - name: Distribute Velociraptor client executable to RedHat-based hosts
   copy:
-    src: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_exe.rpm
+    src: /opt/velociraptor-docker/velociraptor/clients/linux/velociraptor_client_repacked.rpm
     dest: /usr/local/src/velociraptor_client_exe.rpm
     mode: '0755'
   become: true
