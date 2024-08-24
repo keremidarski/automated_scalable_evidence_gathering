@@ -1,14 +1,14 @@
 # Automated Scalable Digital Evidence Gathering
 
-This project aims to automate the gathering and analysis of digital evidence across various operating systems (Windows, Linux, MacOS, FreeBSD) using tools like [Velociraptor](https://docs.velociraptor.app/) and [GRR](https://grr-doc.readthedocs.io/en/latest/). The workflow is designed to be scalable and OS-agnostic, facilitating quick and efficient deployment of forensic tools during an emergency.
+This project automates the gathering and analysis of digital evidence across various operating systems (Windows, Linux and MacOS) using [Velociraptor](https://docs.velociraptor.app/) and [GRR](https://grr-doc.readthedocs.io/en/latest/). The workflow is designed to be scalable and OS-agnostic, enabling quick and efficient deployment of forensic tools during an emergency.
 
 ### Key Features
 
-- **OS-agnostic:** Works with Windows, Linux, and MacOS hosts.
-- **Scalable:** Handles both small and large numbers of hosts.
+- **OS-agnostic:** Supports Windows, Linux, and MacOS hosts.
+- **Scalable:** Handles both small and large-scale deployments.
 - **Automated Deployment:** Uses Ansible to automate the installation and configuration of forensic tools.
-- **Containerization:** Uses Docker to ensure consistency and portability of forensic tools.
-- **Flexibility:** Supports deployment of either Velociraptor or GRR agents, or both, depending on the requirements.
+- **Containerization:** Uses Docker Compose for consistent and portable deployment of forensic servers.
+- **Flexibility:** Supports deployment of either Velociraptor or GRR agents, or both.
 
 ## Usage
 
@@ -21,65 +21,29 @@ This project aims to automate the gathering and analysis of digital evidence acr
    ```
 
 2. **Configure the inventory:**
-   - Update `ansible/hosts` with the host details.
+   - Update `ansible/hosts.ini` with the host details.
 
-3. **Install Docker on all hosts:**
+### Environment Preparation
+
+1. **Prepare the environment on localhost:**
    ```bash
-   ansible-playbook ansible/install_docker.yml
+   ansible-playbook ansible/prep_environment.yml
    ```
+   - This playbook installs Git, Docker, and Docker Compose on the localhost, ensuring the environment is ready for deployment.
 
 ### Deploy Velociraptor
 
-1. **Deploy Velociraptor server and agents:**
+1. **Deploy Velociraptor server and clients:**
    ```bash
    ansible-playbook ansible/deploy_velociraptor.yml
    ```
-
-2. **Deploy only Velociraptor agents to connect to an existing server:**
-   - Update `ansible/deploy_velociraptor_agents.yml` with the correct `server_url`.
-   ```bash
-   ansible-playbook ansible/deploy_velociraptor_agents.yml
-   ```
+   - This playbook deploys the Velociraptor server on the localhost using Docker Compose and installs the Velociraptor clients on all hosts defined in the inventory.
 
 ### Deploy GRR
 
-1. **Deploy GRR server and agents:**
+1. **Deploy GRR server and clients:**
    ```bash
    ansible-playbook ansible/deploy_grr.yml
    ```
-
-2. **Deploy only GRR agents to connect to an existing server:**
-   - Update `ansible/deploy_grr_agents.yml` with the correct `server_url`.
-   ```bash
-   ansible-playbook ansible/deploy_grr_agents.yml
-   ```
-
-### Deployment Playbooks
-
-- **Install Docker:** Installs Docker on all specified hosts.
-  ```bash
-  ansible-playbook ansible/install_docker.yml
-  ```
-
-- **Deploy Velociraptor server and agents:** Deploys Velociraptor server on localhost and agents on all hosts.
-  ```bash
-  ansible-playbook ansible/deploy_velociraptor.yml
-  ```
-
-- **Deploy GRR server and agents:** Deploys GRR server on localhost and agents on all hosts.
-  ```bash
-  ansible-playbook ansible/deploy_grr.yml
-  ```
-
-- **Deploy only Velociraptor agents to an existing server:**
-  - Update `ansible/deploy_velociraptor_agents.yml` with the correct `server_url`.
-  ```bash
-  ansible-playbook ansible/deploy_velociraptor_agents.yml
-  ```
-
-- **Deploy only GRR agents to an existing server:**
-  - Update `ansible/deploy_grr_agents.yml` with the correct `server_url`.
-  ```bash
-  ansible-playbook ansible/deploy_grr_agents.yml
-  ```
+   - This playbook deploys the GRR server on the localhost using Docker Compose and installs the GRR clients on all hosts defined in the inventory.
 
