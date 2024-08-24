@@ -1,11 +1,13 @@
-- hosts: localhost
+- name: Deploy Velociraptor server on localhost
+  hosts: localhost
   become: true
   roles:
     - velociraptor_server
     - velociraptor_executables
 
-- hosts: all
-  become: true
+- name: Deploy Velociraptor clients to inventory
+  hosts: all
+  # become: true
   roles:
     - role: velociraptor_client
 

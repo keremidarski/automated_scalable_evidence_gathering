@@ -1,0 +1,35 @@
+- name: Distribute GRR client installer to Debian-based hosts
+  copy:
+    src: /opt/grr-docker/grr/containers/grr/configurations/executables/installers/grr_{{ ansible_architecture }}.deb
+    dest: /usr/local/src/grr_client.deb
+    mode: '0755'
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Distribute GRR client installer to RedHat-based hosts
+  copy:
+    src: /opt/grr-docker/grr/containers/grr/configurations/executables/installers/grr_{{ ansible_architecture }}.rpm
+    dest: /usr/local/src/grr_client.rpm
+    mode: '0755'
+  become: true
+  when: ansible_os_family == 'RedHat'
+
+- name: Distribute GRR client installer to Windows hosts
+  win_copy:
+    src: /opt/grr-docker/grr/containers/grr/configurations/executables/installers/grr_{{ ansible_architecture }}.msi
+    dest: C:\Program Files\GRR\grr_client.msi
+  when: ansible_os_family == 'Windows'
+
+- name: Install GRR client on Debian-based hosts
+  command: dpkg -i /usr/local/src/grr_client.deb
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Install GRR client on RedHat-based hosts
+  command: rpm -i /usr/local/src/grr_client.rpm
+  become: true
+  when: ansible_os_family == 'RedHat'
+
+- name: Install GRR client on Windows hosts
+  win_shell: msiexec /i "C:\Program Files\GRR\grr_client.msi" /quiet
+  when: ansible_os_family == 'Windows'

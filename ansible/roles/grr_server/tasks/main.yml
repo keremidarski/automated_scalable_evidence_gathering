@@ -1,33 +1,29 @@
-- name: Generate GRR server config
-  template:
-    src: server.local.j2
-    dest: /etc/grr/server.local.yaml
-  when: install_server
+- name: Check if GRR repository directory exists
+  stat:
+    path: /opt/grr-docker
+  register: repo_status
 
-- name: Deploy GRR server
-  docker_container:
-    name: grr_server
-    image: grr
-    state: started
-    restart_policy: always
-    ports:
-      - "8000:8000"
-    volumes:
-      - /etc/grr/server.local.yaml:/etc/grr/server.local.yaml
+- name: Clone the GRR repository
+  git:
+    repo: https://github.com/google/grr
+    dest: /opt/grr-docker
+  when: not repo_status.stat.exists
 
-- name: Generate GRR client config
-  template:
-    src: client.local.j2
-    dest: /etc/grr/client.local.yaml
-  when: not install_server
+- name: Generate GRR certificates and keys
+  command: ./docker_config_files/init_certs.sh
+  args:
+    chdir: /opt/grr-docker
+  when: not repo_status.stat.exists
 
-- name: Deploy GRR agent
-  docker_container:
-    name: grr_agent
-    image: grr
-    state: started
-    restart_policy: always
-    volumes:
-      - /etc/grr/client.local.yaml:/etc/grr/client.local.yaml
-  environment:
-    GRR_SERVER: "{{ server_url }}"
+- name: Start GRR using Docker Compose
+  become: true
+  command: docker-compose up -d
+  args:
+    chdir: /opt/grr-docker
+
+- name: Ensure GRR is running
+  command: docker ps -f name=grr
+  register: result
+  until: result.stdout.find('grr') != -1
+  retries: 5
+  delay: 10

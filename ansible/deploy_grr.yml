@@ -1,12 +1,13 @@
-- name: Install Docker
-  include_role:
-    name: docker
+- name: Deploy GRR server on localhost
+  hosts: localhost
+  become: true
+  roles:
+    - grr_server
+    - grr_executables
 
-- name: Deploy GRR server in Docker
-  docker_container:
-    name: grr_server
-    image: grr
-    state: started
-    restart_policy: always
-    ports:
-      - "8000:8000"
+- name: Deploy GRR clients to inventory
+  hosts: all
+  # become: true
+  roles:
+    - role: grr_client
+
