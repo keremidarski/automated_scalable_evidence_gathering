@@ -3,7 +3,6 @@
   become: true
   roles:
     - grr_server
-    - grr_executables
 
 - name: Deploy GRR clients to inventory
   hosts: all
