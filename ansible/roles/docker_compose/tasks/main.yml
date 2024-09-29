@@ -5,8 +5,8 @@
     mode: '0755'
   when: ansible_os_family in ["Debian", "RedHat"]
 
-# - name: Install Docker Compose on Windows
-#   win_chocolatey:
-#     name: docker-compose
-#     state: present
-#   when: ansible_os_family == 'Windows'
+- name: Install Docker Compose on Windows
+  win_chocolatey:
+    name: docker-compose
+    state: present
+  when: ansible_os_family == 'Windows'

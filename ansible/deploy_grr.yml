@@ -7,7 +7,7 @@
 
 - name: Deploy GRR clients to inventory
   hosts: all
-  # become: true
+  become: true
   roles:
     - role: grr_client
 
