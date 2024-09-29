@@ -7,7 +7,7 @@
 
 - name: Deploy Velociraptor clients to inventory
   hosts: all
-  # become: true
+  become: true
   roles:
     - role: velociraptor_client
 
